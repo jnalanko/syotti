@@ -170,7 +170,7 @@ int main(int argc, char** argv){
     options.add_options()
       ("d,hamming-distance", "Number of allowed mismatches in the baits.", cxxopts::value<LL>()->default_value("40"))
       ("s,sequences", "Path to the fasta file of the input sequences.", cxxopts::value<string>()->default_value(""))
-      ("b,baits", "Path to the fasta file of the baits", cxxopts::value<string>()->default_value(""))
+      ("b,baits", "Path to the fasta file of the baits.", cxxopts::value<string>()->default_value(""))
       ("o,out-prefix", "Filename prefix for the output files.", cxxopts::value<string>()->default_value(""))
       ("fm-index-out", "The algorithm is based on FM-index, which we build at the start. Building the index can take a lot of time and memory. Use this option to save the FM-index to disk so that you can later run the algorithm with different parameters re-using the same FM-index. (optional).", cxxopts::value<string>()->default_value(""))
       ("f,fm-index", "Path to a previously saved FM-index on disk (--fm-index-out). This option loads the FM index from disk instead of building it again.", cxxopts::value<string>()->default_value(""))
