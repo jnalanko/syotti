@@ -13,8 +13,6 @@
 #include <unordered_set>
 #include <cmath>
 #include "stdlib_printing.hh"
-#include "neighborhood_structure.hh"
-#include "neighborhood_functions.hh"
 #include "progress.hh"
 #include "util.hh"
 #include "greedy.hh"
