@@ -27,7 +27,8 @@ int main(int argc, char** argv){
 
     options.add_options()
       ("i,input", "Path to the fasta file of the input sequences.", cxxopts::value<string>()->default_value(""))
-      ("o,output", "Path to the output FM-index file", cxxopts::value<string>()->default_value(""));
+      ("o,output", "Path to the output FM-index file", cxxopts::value<string>()->default_value(""))
+      ("h,help", "Print instructions.", cxxopts::value<bool>()->default_value("false"));
 
     cxxopts::ParseResult cli_params = options.parse(argc, argv);
     if (cli_params["help"].as<bool>() == true || original_argc == 1){
