@@ -82,7 +82,7 @@ This writes the following output files:
 | File name     | Explanation |
 | ------------- | ------------- |
 | ./my_examine_output_path-cover_marks.txt            | Same as the cover marks file output by the greedy algorithm. |
-| ./my_examine_output_path-cover-fractions.txt"       | Same as the cover fractions file output by the greedy algorithm. |
+| ./my_examine_output_path-cover-fractions.txt       | Same as the cover fractions file output by the greedy algorithm. |
 | ./my_examine_output_path-crossings.txt              | A text file with a number of lines equal to the lengths of the baits. The i-th file has a pair (x,y), were y is the fraction of baits that cross a branch in the de-bruijn graph of order x of the input sequences. |
 | ./my_examine_output_path-gaps.txt | A text file consisting of one line of space-separated integers representing the lengths of the runs of zeroes in the cover marks file. The cover has no gaps the line is empty. |
 
