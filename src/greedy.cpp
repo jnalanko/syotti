@@ -34,7 +34,7 @@ int main(int argc, char** argv){
       ("fm-index-out", "The algorithm is based on FM-index, which we build at the start. Building the index can take a lot of time and memory. Use this option to save the FM-index to disk so that you can later run the algorithm with different parameters re-using the same FM-index. (optional).", cxxopts::value<string>()->default_value(""))
       ("f,fm-index", "Path to a previously saved FM-index on disk (--fm-index-out). This option loads the FM index from disk instead of building it again.", cxxopts::value<string>()->default_value(""))
       ("o,out", "Filename prefix for the output files.", cxxopts::value<string>()->default_value(""))
-      ("r,randomize", "Randomize the processing order the sequences in the greedy algorithm.", cxxopts::value<bool>()->default_value("false"))
+      ("r,randomize", "Randomize the processing order of the sequences in the greedy algorithm.", cxxopts::value<bool>()->default_value("false"))
       ("t,n-threads", "Maximum number of parallel threads. The program is not very well optimized for parallel processing, so don't expect much of a speedup here.", cxxopts::value<LL>()->default_value("1"))
       ("c,cutoff", "Stop the greedy algorithm after this fraction of positions is covered. For example: 0.99.", cxxopts::value<double>()->default_value("1"))
       ("no-rev-comp", "By default, a string also matches to its reverse complement. Use this option to turn off reverse complement matching.", cxxopts::value<bool>()->default_value("false"))

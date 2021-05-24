@@ -51,7 +51,7 @@ Usage:
                               "")
   -o, --out arg               Filename prefix for the output files. (default:
                               "")
-  -r, --randomize             Randomize the processing order the sequences in
+  -r, --randomize             Randomize the processing order of the sequences in
                               the greedy algorithm.
   -t, --n-threads arg         Maximum number of parallel threads. The program
                               is not very well optimized for parallel
