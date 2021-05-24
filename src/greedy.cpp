@@ -37,7 +37,6 @@ int main(int argc, char** argv){
       ("r,randomize", "Randomize the processing order of the sequences in the greedy algorithm.", cxxopts::value<bool>()->default_value("false"))
       ("t,n-threads", "Maximum number of parallel threads. The program is not very well optimized for parallel processing, so don't expect much of a speedup here.", cxxopts::value<LL>()->default_value("1"))
       ("c,cutoff", "Stop the greedy algorithm after this fraction of positions is covered. For example: 0.99.", cxxopts::value<double>()->default_value("1"))
-      ("no-rev-comp", "By default, a string also matches to its reverse complement. Use this option to turn off reverse complement matching.", cxxopts::value<bool>()->default_value("false"))
       ("g,seed-len", "The length of the seeds in the FM-index seed-and-extend approximate string search subroutine. A lower value will find more matches, but will be slower.", cxxopts::value<LL>()->default_value("20"))
       ("h,help", "Print instructions.", cxxopts::value<bool>()->default_value("false"))
     ;
@@ -59,7 +58,6 @@ int main(int argc, char** argv){
     LL n_threads = cli_params["n-threads"].as<LL>();
     double cutoff = cli_params["cutoff"].as<double>();
     bool randomize = cli_params["randomize"].as<bool>();
-    bool rev_comp = !(cli_params["no-rev-comp"].as<bool>());
 
     omp_set_num_threads(n_threads);
 
@@ -71,7 +69,7 @@ int main(int argc, char** argv){
     check_writable(cover_fractions_outfile);
     check_writable(cover_marks_outfile);
 
-    vector<string> seqs = read_sequences(cli_params["sequences"].as<string>(), rev_comp);
+    vector<string> seqs = read_sequences(cli_params["sequences"].as<string>(), true); // Appends reverse complement
 
     string fmi_path = cli_params["fm-index"].as<string>();
     string fmi_out = cli_params["fm-index-out"].as<string>();
@@ -97,7 +95,7 @@ int main(int argc, char** argv){
     NeighborFunction NF;
     NF.init(&NCF, &seqs, d, bait_length);
     Greedy alg;
-    alg.init(&NF, &seqs, bait_length, d, g, randomize, cutoff, rev_comp);
+    alg.init(&NF, &seqs, bait_length, d, g, randomize, cutoff);
     Greedy::Result res = alg.run();
 
     cerr << res.baits.size() << " baits" << endl;

@@ -50,13 +50,12 @@ public:
     NeighborFunction* NF; // Non-owning pointer
     double cutoff; // Stop after this fraction has been covered
     bool randomize;
-    bool rev_comps;
 
     Greedy(){}
 
     // Sequences must be the same and in the same order as what the neighbor candiate function was built for
     // NCF pointer does not transfer ownership.
-    void init(NeighborFunction* NF, vector<string>* seqs, LL bait_length, LL d, LL g, bool randomize, double cutoff, bool rev_comps){
+    void init(NeighborFunction* NF, vector<string>* seqs, LL bait_length, LL d, LL g, bool randomize, double cutoff){
         this->bait_length = bait_length;
         this->d = d;
         this->g = g;
@@ -64,7 +63,6 @@ public:
         this->seqs = seqs;
         this->randomize = randomize;
         this->cutoff = cutoff;
-        this->rev_comps = rev_comps;
     }
 
     struct Result{
@@ -115,7 +113,7 @@ public:
                         result.covered[sequence_id][start+off] = 1;
                     }
                     vector<pair<LL,LL> > neighbors = NF->get_neighbors(x);
-                    if(rev_comps) for(auto P : NF->get_neighbors(get_rc(x))) neighbors.push_back(P);
+                    for(auto P : NF->get_neighbors(get_rc(x))) neighbors.push_back(P);
                     for(pair<LL,LL> P : neighbors){
                         LL doc_id = P.first;
                         LL pos = P.second;
