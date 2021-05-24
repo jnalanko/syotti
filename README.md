@@ -13,5 +13,9 @@ mkdir build
 cd build
 cmake ..
 make
+
+cd ../..
+make toolkit
+make tests # Optional
 ```
 
