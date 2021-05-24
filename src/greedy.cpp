@@ -24,21 +24,21 @@ using namespace std;
 
 int main(int argc, char** argv){
 
-    cxxopts::Options options("Greedy","Computes a greedy bait cover. A precomputed FM-index can be given.");
+    cxxopts::Options options("Greedy","Computes a greedy bait cover.");
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value
 
     options.add_options()
-      ("f,fm-index", "Path to the FM index file of the sequences (optional)", cxxopts::value<string>()->default_value(""))
-      ("fm-index-out", "Path where to save the FM-index (optional)", cxxopts::value<string>()->default_value(""))
-      ("s,sequences", "Path to a fasta FILE of the input sequences", cxxopts::value<string>()->default_value(""))
-      ("o,out", "Filename prefix of the output files (which are fasta file containing the baits)", cxxopts::value<string>()->default_value(""))
-      ("r,randomize", "Randomize the order the sequences are processed in", cxxopts::value<bool>()->default_value("false"))
-      ("t,n-threads", "Number of parallel threads", cxxopts::value<LL>()->default_value("1"))
-      ("c,cutoff", "Stops after this fraction is positions is covered. For example 0.99", cxxopts::value<double>()->default_value("1"))
-      ("no-rev-comp", "Make reverse complements not considered matches", cxxopts::value<bool>()->default_value("false"))
-      ("g,seed-len", "Seed and extend g-mer seed length", cxxopts::value<LL>()->default_value("20"))
-      ("L,bait-len", "Length of the baits", cxxopts::value<LL>()->default_value("120"))
-      ("d,hamming-distance", "Number of allowed mismatches", cxxopts::value<LL>()->default_value("40"))
+      ("L,bait-len", "Length of the baits.", cxxopts::value<LL>()->default_value("120"))
+      ("d,hamming-distance", "Number of allowed mismatches in the baits.", cxxopts::value<LL>()->default_value("40"))
+      ("s,sequences", "Path to a fasta file of the input sequences.", cxxopts::value<string>()->default_value(""))
+      ("fm-index-out", "The algorithm is based on FM-index, which we build at the start. Building the index can take a lot of time and memory. Use this option to save the FM-index to disk so that you can later run the algorithm with different parameters re-using the same FM-index. (optional).", cxxopts::value<string>()->default_value(""))
+      ("f,fm-index", "Path to a previously saved FM-index on disk (--fm-index-out). This option loads the FM index from disk instead of building it again.", cxxopts::value<string>()->default_value(""))
+      ("o,out", "Filename prefix for the output files.", cxxopts::value<string>()->default_value(""))
+      ("r,randomize", "Randomize the processing order the sequences in the greedy algorithm.", cxxopts::value<bool>()->default_value("false"))
+      ("t,n-threads", "Maximum number of parallel threads. The program is not very well optimized for parallel processing, so don't expect much of a speedup here.", cxxopts::value<LL>()->default_value("1"))
+      ("c,cutoff", "Stop the greedy algorithm after this fraction of positions is covered. For example: 0.99.", cxxopts::value<double>()->default_value("1"))
+      ("no-rev-comp", "By default, a string also matches to its reverse complement. Use this option to turn off reverse complement matching.", cxxopts::value<bool>()->default_value("false"))
+      ("g,seed-len", "The length of the seeds in the FM-index seed-and-extend approximate string search subroutine. A lower value will find more matches, but will be slower.", cxxopts::value<LL>()->default_value("20"))
       ("h,help", "Print instructions.", cxxopts::value<bool>()->default_value("false"))
     ;
 
