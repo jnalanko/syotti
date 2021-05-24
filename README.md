@@ -24,7 +24,7 @@ This writes three output files:
 | File name     | Explanation |
 | ------------- | ------------- |
 | ./my_result_path-baits.fna            | The baits in fasta format.  |
-| ./my_result_path-cover-fractions.txt  | A text file containing one line for each bait. The i-th line is the fraction of characters covered by baits 0..i.  |
+| ./my_result_path-cover-fractions.txt  | A text file containing one line for each bait. The i-th line contains the fraction of characters covered by baits 0..i.  |
 | ./my_result_path-cover-marks.txt      | A text file containing one line per input sequence. Line j contains an ascii string of zeroes and ones that has length equal to the length of the j-th input sequence. Character i of the j-th input sequence is covered by the bait set if the bit at position i of the j-th line is a one (indexing starts from zero). This is not and if-and-only-if condition. A position might be covered even if we have marked it with a zero if the FM-index seed-and-extend approximate search missed it. |
 
 The full set of input parameter is listed below.
