@@ -29,7 +29,7 @@ This writes three output files:
 | ./my_result_path-cover-fractions.txt  | A text file containing one line for each bait. The i-th line contains the fraction of characters covered by baits 0..i.  |
 | ./my_result_path-cover-marks.txt      | A text file containing one line per input sequence. Line j contains an ascii string of zeroes and ones that has length equal to the length of the j-th input sequence. Character i of the j-th input sequence is covered by the bait set if the bit at position i of the j-th line is a one (indexing starts from zero). This is not and if-and-only-if condition. A position might be covered even if we have marked it with a zero if the FM-index seed-and-extend approximate search missed it. |
 
-The full set of input parameter is listed below.
+The full set of input parameters is listed below.
 
 ```
 Computes a greedy bait cover.
@@ -79,6 +79,27 @@ If the cutoff (--cutoff) of the greedy algorithm was set to below 1, there may b
 
 ```
 ./bin/fill_gaps -G 10 -d 40 -s testcases/coli3.fna -b my_result_path-baits.fna -c my_result_path-cover-marks.txt -o my_extended_bait_set.fna
+```
+
+## Taking a random subset of baits
+
+If you wan to reduce the number of baits, you may want to keep only some random subset of them. For example, to keep a subset of size 1000, run the following:
+
+```
+./bin/random_subset -i input.fna -o output.fna -n 1000
+```
+
+The full set of input parameter is below:
+
+```
+Take a random subset of sequences in a fasta file.
+Usage:
+  ./bin/random_subset [OPTION...]
+
+  -i, --input arg   Input fasta file. (default: "")
+  -o, --output arg  Output fasta file. (default: "")
+  -n arg            Size of the subset. (default: -1)
+  -h, --help        Print instructions.
 ```
 
 ## Examining a solution
