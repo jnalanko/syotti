@@ -176,7 +176,7 @@ int main(int argc, char** argv){
       ("f,fm-index", "Path to a previously saved FM-index on disk (--fm-index-out). This option loads the FM index from disk instead of building it again.", cxxopts::value<string>()->default_value(""))
       ("t,n-threads", "Maximum number of parallel threads. The program is not very well optimized for parallel processing, so don't expect much of a speedup here.", cxxopts::value<LL>()->default_value("1"))
       ("g,seed-len", "The length of the seeds in the FM-index seed-and-extend approximate string search subroutine. A lower value will find more matches, but will be slower.", cxxopts::value<LL>()->default_value("20"))
-      ("v,verbose", "Print more debug output", cxxopts::value<bool>()->default_value("false"))
+      ("v,verbose", "Print debug output", cxxopts::value<bool>()->default_value("false"))
       ("h,help", "Print instructions.", cxxopts::value<bool>()->default_value("false"))
     ;
 

@@ -43,14 +43,13 @@ LL run_length(const vector<T>& v, LL from){
     return idx-from;
 }
 
-void run(NeighborFunction& NF, vector<string>& seqs, vector<string>& baits, vector<vector<bool>> & cover_marks, LL max_gap, LL bait_length){
+void run(NeighborFunction& NF, vector<string>& seqs, vector<string>& baits, vector<vector<bool>> & cover_marks, LL max_gap, LL bait_length, bool verbose){
     for(LL seq_id = 0; seq_id < seqs.size(); seq_id++){
         vector<bool>& v = cover_marks[seq_id];
         LL idx = 0;
         while(idx < v.size()){
             LL run = run_length(v,idx);
-            //cout << seq_id << " " << idx << " " << run << " " << v[idx] << endl;
-            if(run > max_gap && v[idx] == 0) cout << run << endl;
+            if(verbose && run > max_gap && v[idx] == 0) cout << "Filling a gap of length " << run << endl;
             if(v[idx] == 1 || (v[idx] == 0 && run <= max_gap)) idx += run;
             else{ // Select bait
                 idx += max_gap;
@@ -87,6 +86,7 @@ int main(int argc, char** argv){
       ("f,fm-index", "Path to a previously saved FM-index on disk (--fm-index-out). This option loads the FM index from disk instead of building it again.", cxxopts::value<string>()->default_value(""))
       ("t,n-threads", "Maximum number of parallel threads. The program is not very well optimized for parallel processing, so don't expect much of a speedup here.", cxxopts::value<LL>()->default_value("1"))
       ("g,seed-len", "Seed and extend g-mer seed length", cxxopts::value<LL>()->default_value("20"))
+      ("v,verbose", "Print debug output", cxxopts::value<bool>()->default_value("false"))
       ("h,help", "Print instructions.", cxxopts::value<bool>()->default_value("false"))
     ;
 
@@ -110,6 +110,7 @@ int main(int argc, char** argv){
     LL max_gap = cli_params["max-gap"].as<LL>();
     assert(max_gap > 0);
     string outfile = cli_params["out"].as<string>();
+    bool verbose = cli_params["verbose"].as<bool>();
     check_writable(outfile);
 
     cerr << "Loading sequences" << endl;
@@ -147,7 +148,7 @@ int main(int argc, char** argv){
     NF.init(&NCF, &seqs, d, bait_length);
 
     cerr << "Running" << endl;   
-    run(NF, seqs, baits, cover_marks, max_gap, bait_length);
+    run(NF, seqs, baits, cover_marks, max_gap, bait_length, verbose);
 
     cerr << "Writing result to " << outfile << endl;
     throwing_ofstream out(outfile);

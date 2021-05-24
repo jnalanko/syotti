@@ -13,10 +13,12 @@ make toolkit
 
 # Usage
 
-For example, to compute a set of baits of length 120, allowing up to 40 mismatches, use the following:
+## Greedy covering
+
+For example, to compute a set of baits of length 120, allowing up to 40 mismatches, covering at least 98 percent of the file `testcases/coli3.fna` (found in this repository), use the following:
 
 ```
-./bin/greedy -L 120 -d 40 -s input.fna -o ./my_result_path
+./bin/greedy -L 120 -d 40 -c 0.98 -s testcases/coli3.fna -o ./my_result_path
 ```
 
 This writes three output files: 
@@ -71,10 +73,20 @@ Usage:
 
 ```
 
+## Filling gaps
+
+If the cutoff (--cutoff) of the greedy algorithm was set to below 1, there may be gaps in the cover. In this case, we can add in some more baits to ensure that the maximum gap length is at most a given value. For example, to continue from the example of the greedy algorithm above, you may run the following to ensure that the longest gap is at most 10 characters wide:
+
+```
+./bin/fill_gaps -G 10 -d 40 -s testcases/coli3.fna -b my_result_path-baits.fna -c my_result_path-cover-marks.txt -o my_extended_bait_set.fna
+```
+
+## Examining a solution
+
 To compute various statistics on any bait set, run for example the following:
 
 ```
-./bin/examine -d 40 -s input.fna -b baits.fna -o ./my_examine_output_path
+./bin/examine -d 40 -s testcases/coli3.fna -b baits.fna -o ./my_examine_output_path
 ```
 
 This writes the following output files:
