@@ -8,15 +8,7 @@ cd sdsl-lite
 sh install.sh
 cd ..
 
-cd googletest
-mkdir build
-cd build
-cmake ..
-make
-
-cd ../..
 make toolkit
-make tests # Optional
 ```
 
 # Usage
@@ -131,3 +123,18 @@ Usage:
   -h, --help                  Print instructions.
 
 ```
+
+# Compiling the tests (optional)
+
+```
+cd googletest
+mkdir build
+cd build
+cmake ..
+make
+cd ../..
+
+make tests
+```
+
+The test executables will be written to ./bin
