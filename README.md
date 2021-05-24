@@ -62,9 +62,6 @@ Usage:
   -c, --cutoff arg            Stop the greedy algorithm after this fraction
                               of positions is covered. For example: 0.99.
                               (default: 1)
-      --no-rev-comp           By default, a string also matches to its
-                              reverse complement. Use this option to turn off
-                              reverse complement matching.
   -g, --seed-len arg          The length of the seeds in the FM-index
                               seed-and-extend approximate string search subroutine. A
                               lower value will find more matches, but will be
