@@ -164,19 +164,19 @@ LL run_length(const vector<T>& v, LL from){
 
 int main(int argc, char** argv){
 
-    cxxopts::Options options("Examine", "Computes various statistics");
+    cxxopts::Options options(argv[0], "Computes various statistics on a given bait set.");
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value
 
     options.add_options()
-      ("v,verbose", "Print more debug output", cxxopts::value<bool>()->default_value("false"))
-      ("o,out-prefix", "The prefix for the output files", cxxopts::value<string>()->default_value(""))
-      ("f,fm-index", "Path to the FM index file of the sequences (optional)", cxxopts::value<string>()->default_value(""))
-      ("s,sequences", "Path to the fasta file of the input sequences", cxxopts::value<string>()->default_value(""))
-      ("t,n-threads", "Number of parallel threads", cxxopts::value<LL>()->default_value("1"))
+      ("d,hamming-distance", "Number of allowed mismatches in the baits.", cxxopts::value<LL>()->default_value("40"))
+      ("s,sequences", "Path to the fasta file of the input sequences.", cxxopts::value<string>()->default_value(""))
       ("b,baits", "Path to the fasta file of the baits", cxxopts::value<string>()->default_value(""))
-      ("g,seed-len", "Seed and extend g-mer seed length", cxxopts::value<LL>()->default_value("20"))
-      ("L,bait-len", "Length of the baits", cxxopts::value<LL>()->default_value("120"))
-      ("d,hamming-distance", "Number of allowed mismatches", cxxopts::value<LL>()->default_value("40"))
+      ("o,out-prefix", "Filename prefix for the output files.", cxxopts::value<string>()->default_value(""))
+      ("fm-index-out", "The algorithm is based on FM-index, which we build at the start. Building the index can take a lot of time and memory. Use this option to save the FM-index to disk so that you can later run the algorithm with different parameters re-using the same FM-index. (optional).", cxxopts::value<string>()->default_value(""))
+      ("f,fm-index", "Path to a previously saved FM-index on disk (--fm-index-out). This option loads the FM index from disk instead of building it again.", cxxopts::value<string>()->default_value(""))
+      ("t,n-threads", "Maximum number of parallel threads. The program is not very well optimized for parallel processing, so don't expect much of a speedup here.", cxxopts::value<LL>()->default_value("1"))
+      ("g,seed-len", "The length of the seeds in the FM-index seed-and-extend approximate string search subroutine. A lower value will find more matches, but will be slower.", cxxopts::value<LL>()->default_value("20"))
+      ("v,verbose", "Print more debug output", cxxopts::value<bool>()->default_value("false"))
       ("h,help", "Print instructions.", cxxopts::value<bool>()->default_value("false"))
     ;
 
@@ -188,20 +188,14 @@ int main(int argc, char** argv){
 
     LL g = cli_params["g"].as<LL>();
     LL d = cli_params["d"].as<LL>();
-    LL bait_length = cli_params["bait-len"].as<LL>();
     string out_prefix = cli_params["out-prefix"].as<string>();
     string baitfile = cli_params["baits"].as<string>();
     string fm_index_file = cli_params["fm-index"].as<string>();
+    string fmi_out = cli_params["fm-index-out"].as<string>();
     string sequence_file = cli_params["sequences"].as<string>();
     bool verbose = cli_params["verbose"].as<bool>();
-    //bool compute_gaps = cli_params["gaps"].as<bool>();
     LL n_threads = cli_params["n-threads"].as<LL>();
-    //LL n_points = cli_params["n-eval-points"].as<LL>();
     omp_set_num_threads(n_threads);
-
-    if(fm_index_file == ""){
-        cerr << "Error: FM index file not given" << endl; exit(1);
-    }
 
     if(sequence_file == ""){
         cerr << "Error: Sequence file not given" << endl; exit(1);
@@ -215,20 +209,37 @@ int main(int argc, char** argv){
         cerr << "Error: Bait file not given" << endl; exit(1);
     }
 
+    throwing_ofstream final_gaps_out(out_prefix + "-gaps.txt");
+    throwing_ofstream final_crossings_out(out_prefix + "-crossings.txt");
+    throwing_ofstream final_cover_marks_out(out_prefix + "-cover_marks.txt");
+    throwing_ofstream cover_curve_out(out_prefix + "-cover-fractions.txt");
+
     cerr << "Loading sequences" << endl;
     vector<string> sequences = read_sequences(sequence_file, true); // Reverse complements included to match the FM index
     cerr << "Loading baits" << endl;
     vector<string> baits = read_sequences(baitfile, false); // Reverse complements not included
 
-    cerr << "Loading FM index" << endl;
-    FM_index fmi;
-    throwing_ifstream fmi_in(fm_index_file);
-    fmi.load(fmi_in.stream);
+    assert(baits.size() > 0);
+    for(LL i = 1; i < baits.size(); i++) assert(baits[i].size() == baits[i-1].size());
+    
+    LL bait_length = baits[0].size();
 
-    throwing_ofstream final_gaps_out(out_prefix + "-gaps.txt");
-    throwing_ofstream final_crossings_out(out_prefix + "-crossings.txt");
-    throwing_ofstream final_cover_marks_out(out_prefix + "-cover_marks.txt");
-    throwing_ofstream cover_curve_out(out_prefix + "-cover-curve.txt");
+    FM_index fmi;
+    if(fm_index_file == ""){
+        cerr << "Constructing FM index" << endl;
+        fmi.construct(sequences);
+        cerr << "FM index construction done" << endl;
+        if(fmi_out != ""){
+            cerr << "Saving the FM-index to " << fmi_out << endl;
+            throwing_ofstream fmi_out_stream(fmi_out, ios_base::binary);
+            fmi.serialize(fmi_out_stream.stream);
+        }
+    } else{
+        throwing_ifstream in(fm_index_file, ios_base::binary); // Throws on error
+        cerr << "Loading FM-index" << endl;
+        fmi.load(in.stream);
+        cerr << "FM index loaded" << endl;
+    }
 
     callback_t gap_length_callback = [&](const State& state){
         if(state.bait_id == baits.size()-1){

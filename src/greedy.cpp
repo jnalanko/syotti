@@ -24,7 +24,7 @@ using namespace std;
 
 int main(int argc, char** argv){
 
-    cxxopts::Options options("Greedy","Computes a greedy bait cover.");
+    cxxopts::Options options(argv[0],"Computes a greedy bait cover.");
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value
 
     options.add_options()
