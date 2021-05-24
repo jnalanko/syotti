@@ -157,7 +157,7 @@ Usage:
 
 ```
 
-# Compiling the tests (optional)
+# Compiling and running the unit tests (optional)
 
 ```
 cd googletest
