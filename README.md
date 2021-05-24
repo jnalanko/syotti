@@ -83,7 +83,7 @@ If the cutoff (--cutoff) of the greedy algorithm was set to below 1, there may b
 
 ## Taking a random subset of baits
 
-If you wan to reduce the number of baits, you may want to keep only some random subset of them. For example, to keep a subset of size 1000, run the following:
+If you want to reduce the number of baits, you may want to keep only some random subset of them. For example, to keep a subset of size 1000, run the following:
 
 ```
 ./bin/random_subset -i input.fna -o output.fna -n 1000
