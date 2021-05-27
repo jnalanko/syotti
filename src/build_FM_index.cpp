@@ -26,7 +26,7 @@ int main(int argc, char** argv){
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value
 
     options.add_options()
-      ("i,input", "Path to the fasta file of the input sequences.", cxxopts::value<string>()->default_value(""))
+      ("s,sequences", "Path to the fasta file of the input sequences.", cxxopts::value<string>()->default_value(""))
       ("o,output", "Path to the output FM-index file", cxxopts::value<string>()->default_value(""))
       ("h,help", "Print instructions.", cxxopts::value<bool>()->default_value("false"));
 
@@ -37,7 +37,7 @@ int main(int argc, char** argv){
     }
 
     FM_index FMI;
-    string infile = cli_params["input"].as<string>();
+    string infile = cli_params["sequences"].as<string>();
     string outfile = cli_params["output"].as<string>();
     throwing_ofstream out(outfile, ios_base::binary);
     vector<string> seqs = read_sequences(infile, true);
