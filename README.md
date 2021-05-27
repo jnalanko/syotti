@@ -166,7 +166,7 @@ Usage:
 
 ### Examining a solution
 
-To compute various statistics on any bait set, run for example the following:
+To compute various statistics on any bait set baits.fna, run for example the following:
 
 ```
 ./bin/examine -d 40 -s testcases/coli3.fna -f coli3.fmi -b baits.fna -o ./my_examine_output_path
