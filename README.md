@@ -1,12 +1,14 @@
+# Bait cover toolkit
+
 This is a set of command line tools to compute a cover for a set of reference sequences.
 
-# Problem definition
+## Problem definition
 
 Strings A and B of equal length are *d-Hamming neighbors* if the [Hamming distance][https://en.wikipedia.org/wiki/Hamming_distance] of A and B is at most d.
 
 Suppose we have a set of reference sequences S_1, S_2, ... , S_n. The goal is to find a small set of bait strings B_1, ... , B_n, all of equal length L, such that the baits together cover every position of the reference sequences. Bait B_i is considered to cover those positions that are d-Hamming neighbors of B_i.
 
-# Compiling
+## Compiling
 
 ```
 git submodule init
@@ -19,9 +21,9 @@ cd ..
 make toolkit
 ```
 
-# Usage
+## Usage
 
-## Greedy covering
+### Greedy covering
 
 For example, to compute a set of baits of length 120, allowing up to 40 mismatches, covering at least 98 percent of the file `testcases/coli3.fna` (found in this repository), use the following:
 
@@ -78,7 +80,7 @@ Usage:
 
 ```
 
-## Filling gaps
+### Filling gaps
 
 If the cutoff (--cutoff) of the greedy algorithm was set to below 1, there may be gaps in the cover. In this case, we can add in some more baits to ensure that the maximum gap length is at most a given value. For example, to continue from the example of the greedy algorithm above, you may run the following to ensure that the longest gap is at most 10 characters wide:
 
@@ -86,7 +88,7 @@ If the cutoff (--cutoff) of the greedy algorithm was set to below 1, there may b
 ./bin/fill_gaps -G 10 -d 40 -s testcases/coli3.fna -b my_result_path-baits.fna -c my_result_path-cover-marks.txt -o my_extended_bait_set.fna
 ```
 
-## Taking a random subset of baits
+### Taking a random subset of baits
 
 If you want to reduce the number of baits, you may want to keep only some random subset of them. For example, to keep a subset of size 1000, run the following:
 
@@ -107,7 +109,7 @@ Usage:
   -h, --help        Print instructions.
 ```
 
-## Examining a solution
+### Examining a solution
 
 To compute various statistics on any bait set, run for example the following:
 
@@ -162,7 +164,7 @@ Usage:
 
 ```
 
-# Compiling and running the unit tests (optional)
+## Compiling and running the unit tests (optional)
 
 ```
 cd googletest
