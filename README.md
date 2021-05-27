@@ -1,3 +1,11 @@
+This is a set of command line tools to compute a cover for a set of reference sequences.
+
+# Problem definition
+
+Strings A and B of equal length are *d-Hamming neighbors* if the [Hamming distance][https://en.wikipedia.org/wiki/Hamming_distance] of A and B is at most d.
+
+Suppose we have a set of reference sequences S_1, S_2, ... , S_n. The goal is to find a small set of bait strings B_1, ... , B_n, all of equal length L, such that the baits together cover every position of the reference sequences. Bait B_i is considered to cover those positions that are d-Hamming neighbors of B_i.
+
 # Compiling
 
 ```
