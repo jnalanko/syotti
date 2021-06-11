@@ -10,6 +10,8 @@ The problem is parameterized by two integers d and L. Suppose we have a set of r
 
 ## Compiling
 
+The toolkit depends on the sdsl-lite library. To clone and build it, first make sure you have the CMake build system installed, and then run the following commands:
+
 ```
 git submodule init
 git submodule update
@@ -17,7 +19,11 @@ git submodule update
 cd sdsl-lite
 sh install.sh
 cd ..
+```
 
+After this, you may build the toolkit with:
+
+```
 make toolkit
 ```
 
