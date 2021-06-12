@@ -1,10 +1,10 @@
 # Bait cover toolkit
 
-This is a set of command line tools to compute a cover for a set of reference sequences.
+This is a set of command line tools to compute a cover for a set of reference sequences using short bait strings.
 
 ## Problem definition
 
-Strings A and B of equal length are *d-Hamming neighbors* if the [Hamming distance](https://en.wikipedia.org/wiki/Hamming_distance) of A and B is at most d.
+Strings A and B of equal length are *d-Hamming neighbors* if the [Hamming distance](https://en.wikipedia.org/wiki/Hamming_distance) of A to B or the reverse complement of B is at most d.
 
 The problem is parameterized by two integers d and L. Suppose we have a set of reference sequences S_1, S_2, ... , S_n. The goal is to find a small set of bait strings B_1, ... , B_m, all of equal length L, such that the baits together cover every position of the reference sequences. Bait B_i is considered to cover position j of reference S_k if there is a length-L substring X of S_k spanning position j such that X and B_i are d-Hamming neighbors.
 
