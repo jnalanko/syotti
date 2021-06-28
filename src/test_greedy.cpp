@@ -21,10 +21,10 @@ TEST(greedy_test, FM_against_hash){
     Hash_NF.init(&Hash_NCF, &seqs, d, bait_length);
 
     Greedy G_FM;
-    G_FM.init(&FM_NF, &seqs, bait_length, d, g, false, 1, true);
+    G_FM.init(&FM_NF, &seqs, bait_length, d, g, false, 1);
 
     Greedy G_hash;
-    G_hash.init(&Hash_NF, &seqs, bait_length, d, g, false, 1, true);
+    G_hash.init(&Hash_NF, &seqs, bait_length, d, g, false, 1);
 
     Greedy::Result res_hash = G_hash.run();
     Greedy::Result res_FM = G_FM.run();
