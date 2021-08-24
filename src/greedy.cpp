@@ -70,6 +70,12 @@ int main(int argc, char** argv){
     check_writable(cover_marks_outfile);
 
     vector<string> seqs = read_sequences(cli_params["sequences"].as<string>(), true); // Appends reverse complement
+    for(string& seq : seqs){
+        if(seq.size() < bait_length){
+            cerr << "Error: sequence is shorter than bait length " << bait_length << ": " << seq << endl;
+            return 1;
+        }
+    }
 
     string fmi_path = cli_params["fm-index"].as<string>();
     string fmi_out = cli_params["fm-index-out"].as<string>();
