@@ -114,7 +114,9 @@ int main(int argc, char** argv){
     cerr << "Cover fractions output file: " << cover_fractions_outfile << endl;
     cerr << "Cover marks output file: " << cover_marks_outfile << endl;
 
-    for(string& S : res.baits) baits_out << ">\n" << S << "\n";
+    for(LL i = 0; i < res.baits.size(); i++){
+        baits_out << ">" << i << "\n" << res.baits[i] << "\n";
+    }
     for(double x : res.cover_fractions) cover_fractions_out << x << "\n";
     for(vector<bool>& v : res.covered){
         for(bool b : v) cover_marks_out << b;

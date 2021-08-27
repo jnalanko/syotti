@@ -152,6 +152,8 @@ int main(int argc, char** argv){
 
     cerr << "Writing result to " << outfile << endl;
     throwing_ofstream out(outfile);
-    for(string& S : baits) out << ">\n" << S << "\n";
+    for(LL i = 0; i < baits.size(); i++){
+        out << ">" << i << "\n" << baits[i] << "\n";
+    }
 
 }    
