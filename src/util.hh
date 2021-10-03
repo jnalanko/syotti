@@ -22,15 +22,14 @@ typedef int64_t LL;
 string get_rc(string S){
     std::reverse(S.begin(), S.end());
     for(char& c : S){
+        if(!(c >= 'A' && c <= 'Z')){
+            cerr << "Error: non-upper-case character found: " << c << endl;
+            exit(1);
+        }
         if(c == 'A') c = 'T';
         else if(c == 'C') c = 'G';
         else if(c == 'G') c = 'C';
         else if(c == 'T') c = 'A';
-        else{
-            cerr << "Error: invalid character in sequence: " << c << endl;
-            cerr << "(Should be one of upper case characters A,C,G,T)" << endl;
-            exit(1);
-        }
     }
     return S;
 }
