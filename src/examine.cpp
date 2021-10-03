@@ -97,7 +97,7 @@ struct State{
     LL n_covered = 0;
     LL bait_id = 0;
     string bait;
-    vector<vector<bool> > cover;
+    vector<vector<int32_t> > cover; // Number of times each base pair is covered
     vector<pair<LL,LL> > neighbors;
 };
 
@@ -111,7 +111,7 @@ void run(vector<string>& seqs, vector<string>& baits, FM_index& fmi, LL d, LL g,
     NeighborFunction NF;
     NF.init(&NCF, &seqs, d, bait_length);
     for(string& S : seqs){
-        vector<bool> v(S.size());
+        vector<int32_t> v(S.size());
         state.total_to_cover += S.size();
         state.cover.push_back(v);
     }
@@ -134,7 +134,7 @@ void run(vector<string>& seqs, vector<string>& baits, FM_index& fmi, LL d, LL g,
                    hamming_distance(get_rc(state.bait), seqs[doc_id].substr(pos, bait_length)) <= d);
             for(LL i = pos; i < pos+bait_length; i++){
                 if(state.cover[doc_id][i] == 0) state.n_covered++;
-                state.cover[doc_id][i] = 1;
+                state.cover[doc_id][i]++;
             }
         }
         pp.job_done(to_string((double)state.n_covered/state.total_to_cover));
@@ -207,7 +207,7 @@ int main(int argc, char** argv){
 
     throwing_ofstream final_gaps_out(out_prefix + "-gaps.txt");
     throwing_ofstream final_crossings_out(out_prefix + "-crossings.txt");
-    throwing_ofstream final_cover_marks_out(out_prefix + "-cover_marks.txt");
+    throwing_ofstream final_coverage_out(out_prefix + "-coverage.txt");
     throwing_ofstream cover_curve_out(out_prefix + "-cover-fractions.txt");
     throwing_ofstream match_positions(out_prefix + "-match-positions.txt");
 
@@ -255,12 +255,12 @@ int main(int argc, char** argv){
         cover_curve_out.stream << (double)state.n_covered/state.total_to_cover << "\n";
     };
 
-    callback_t write_cover_marks_callback = [&](const State& state){
+    callback_t write_coverage_callback = [&](const State& state){
         if(state.bait_id == baits.size()-1){
-            cerr << "Writing cover marks" << endl;
-            for(const vector<bool>& v : state.cover){
-                for(bool b : v) final_cover_marks_out.stream << b;
-                final_cover_marks_out.stream << "\n";
+            cerr << "Writing coverage" << endl;
+            for(auto& v : state.cover){
+                for(LL b : v) final_coverage_out.stream << b << " ";
+                final_coverage_out.stream << "\n";
             }
         }
     };
@@ -285,7 +285,7 @@ int main(int argc, char** argv){
         }
     };
 
-    vector<callback_t> callbacks = {gap_length_callback, write_cover_marks_callback, write_cover_curve_callback, count_branch_crossings_callback, write_match_positions};
+    vector<callback_t> callbacks = {gap_length_callback, write_coverage_callback, write_cover_curve_callback, count_branch_crossings_callback, write_match_positions};
 
     run(sequences, baits, fmi, d, g, bait_length, verbose, callbacks);
 
