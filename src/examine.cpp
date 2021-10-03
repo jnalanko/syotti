@@ -276,10 +276,12 @@ int main(int argc, char** argv){
     };
 
     callback_t write_match_positions = [&](const State& state){
-        // Line format: bait-id ref-id start-pos-in-ref mismatches
+        // Line format: bait-id ref-id start-pos-in-ref mismatches is-rc-match
         for(pair<LL,LL> P : state.neighbors){
             LL doc_id, pos; std::tie(doc_id, pos) = P;
-            match_positions << state.bait_id << " " << doc_id << " " << pos << " " << hamming_distance(state.bait, sequences[doc_id].substr(pos, bait_length)) << "\n"; 
+            LL dist_fw = hamming_distance(state.bait, sequences[doc_id].substr(pos, bait_length));
+            LL dist_rc = hamming_distance(get_rc(state.bait), sequences[doc_id].substr(pos, bait_length));
+            match_positions << state.bait_id << " " << doc_id << " " << pos << " " << min(dist_fw, dist_rc) << " " << (dist_rc < dist_fw) << "\n"; 
         }
     };
 
