@@ -98,6 +98,7 @@ struct State{
     LL bait_id = 0;
     string bait;
     vector<vector<bool> > cover;
+    vector<pair<LL,LL> > neighbors;
 };
 
 typedef std::function<void(const State&)> callback_t; // Function taking the bait_id of the latest bait and the current cover
@@ -122,9 +123,9 @@ void run(vector<string>& seqs, vector<string>& baits, FM_index& fmi, LL d, LL g,
     state.n_covered = 0;
     for(state.bait_id = 0; state.bait_id < baits.size(); state.bait_id++){
         state.bait = baits[state.bait_id];
-        vector<pair<LL,LL> > neighbors = NF.get_neighbors(state.bait);
-        for(pair<LL,LL> P : NF.get_neighbors(get_rc(state.bait))) neighbors.push_back(P);
-        for(pair<LL,LL> P : neighbors){
+        state.neighbors = NF.get_neighbors(state.bait);
+        for(pair<LL,LL> P : NF.get_neighbors(get_rc(state.bait))) state.neighbors.push_back(P);
+        for(pair<LL,LL> P : state.neighbors){
             LL doc_id, pos; std::tie(doc_id, pos) = P;
             if(verbose){
                 cout << "--" << "\n" << state.bait << "\n" << seqs[doc_id].substr(pos, bait_length) << "\n";
@@ -138,11 +139,6 @@ void run(vector<string>& seqs, vector<string>& baits, FM_index& fmi, LL d, LL g,
         }
         pp.job_done(to_string((double)state.n_covered/state.total_to_cover));
         for(auto& callback : callbacks) callback(state);
-        /*if(callback_indices.size() > 0 && callback_indices.back() == state.bait_id){
-            cerr << "Running callbacks" << endl;
-            for(auto& callback : callbacks) callback(state);
-            callback_indices.pop_back();
-        }*/
     }
 }
 
@@ -213,9 +209,10 @@ int main(int argc, char** argv){
     throwing_ofstream final_crossings_out(out_prefix + "-crossings.txt");
     throwing_ofstream final_cover_marks_out(out_prefix + "-cover_marks.txt");
     throwing_ofstream cover_curve_out(out_prefix + "-cover-fractions.txt");
+    throwing_ofstream match_positions(out_prefix + "-match-positions.txt");
 
     cerr << "Loading sequences" << endl;
-    vector<string> sequences = read_sequences(sequence_file, true); // Reverse complements included to match the FM index
+    vector<string> sequences = read_sequences(sequence_file, true); // Reverse complements included to match the FM index. TODO: document.
     cerr << "Loading baits" << endl;
     vector<string> baits = read_sequences(baitfile, false); // Reverse complements not included
 
@@ -259,7 +256,6 @@ int main(int argc, char** argv){
     };
 
     callback_t write_cover_marks_callback = [&](const State& state){
-        
         if(state.bait_id == baits.size()-1){
             cerr << "Writing cover marks" << endl;
             for(const vector<bool>& v : state.cover){
@@ -279,7 +275,15 @@ int main(int argc, char** argv){
         }
     };
 
-    vector<callback_t> callbacks = {gap_length_callback, write_cover_marks_callback, write_cover_curve_callback, count_branch_crossings_callback};
+    callback_t write_match_positions = [&](const State& state){
+        // Line format: bait-id ref-id start-pos-in-ref mismatches
+        for(pair<LL,LL> P : state.neighbors){
+            LL doc_id, pos; std::tie(doc_id, pos) = P;
+            match_positions << state.bait_id << " " << doc_id << " " << pos << " " << hamming_distance(state.bait, sequences[doc_id].substr(pos, bait_length)) << "\n"; 
+        }
+    };
+
+    vector<callback_t> callbacks = {gap_length_callback, write_cover_marks_callback, write_cover_curve_callback, count_branch_crossings_callback, write_match_positions};
 
     run(sequences, baits, fmi, d, g, bait_length, verbose, callbacks);
 
