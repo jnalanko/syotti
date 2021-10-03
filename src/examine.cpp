@@ -135,7 +135,7 @@ void run(vector<string>& seqs, vector<string>& baits, FM_index& fmi, LL d, LL g,
             for(LL i = pos; i < pos+bait_length; i++){
                 if(state.cover[doc_id][i] == 0) state.n_covered++;
                 state.cover[doc_id][i] = 1;
-            }            
+            }
         }
         pp.job_done(to_string((double)state.n_covered/state.total_to_cover));
         for(auto& callback : callbacks) callback(state);

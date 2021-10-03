@@ -26,6 +26,11 @@ string get_rc(string S){
         else if(c == 'C') c = 'G';
         else if(c == 'G') c = 'C';
         else if(c == 'T') c = 'A';
+        else{
+            cerr << "Error: invalid character in sequence: " << c << endl;
+            cerr << "(Should be one of upper case characters A,C,G,T)" << endl;
+            exit(1);
+        }
     }
     return S;
 }
