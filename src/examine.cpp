@@ -130,8 +130,8 @@ void run(vector<string>& seqs, vector<string>& baits, FM_index& fmi, LL d, LL g,
             if(verbose){
                 cout << "--" << "\n" << state.bait << "\n" << seqs[doc_id].substr(pos, bait_length) << "\n";
             }
-            assert(hamming_distance(state.bait, seqs[doc_id].substr(pos, bait_length)) <= d ||
-                   hamming_distance(get_rc(state.bait), seqs[doc_id].substr(pos, bait_length)) <= d);
+            assert(hamming_distance_not_matching_N(state.bait, seqs[doc_id].substr(pos, bait_length)) <= d ||
+                   hamming_distance_not_matching_N(get_rc(state.bait), seqs[doc_id].substr(pos, bait_length)) <= d);
             for(LL i = pos; i < pos+bait_length; i++){
                 if(state.cover[doc_id][i] == 0) state.n_covered++;
                 state.cover[doc_id][i]++;
@@ -279,8 +279,8 @@ int main(int argc, char** argv){
         // Line format: bait-id ref-id start-pos-in-ref mismatches is-rc-match
         for(pair<LL,LL> P : state.neighbors){
             LL doc_id, pos; std::tie(doc_id, pos) = P;
-            LL dist_fw = hamming_distance(state.bait, sequences[doc_id].substr(pos, bait_length));
-            LL dist_rc = hamming_distance(get_rc(state.bait), sequences[doc_id].substr(pos, bait_length));
+            LL dist_fw = hamming_distance_not_matching_N(state.bait, sequences[doc_id].substr(pos, bait_length));
+            LL dist_rc = hamming_distance_not_matching_N(get_rc(state.bait), sequences[doc_id].substr(pos, bait_length));
             match_positions << state.bait_id << " " << doc_id << " " << pos << " " << min(dist_fw, dist_rc) << " " << (dist_rc < dist_fw) << "\n"; 
         }
     };

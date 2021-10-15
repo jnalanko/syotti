@@ -31,3 +31,9 @@ TEST(greedy_test, FM_against_hash){
     cout << res_hash.baits.size() << " " << res_FM.baits.size() << endl;
     ASSERT_TRUE(res_hash.baits.size() == res_FM.baits.size());
 }
+
+TEST(greedy_test, reverse_complement){
+    string S = "ATGNAC";
+    string rev_S = "GTNCAT"; // Reverse complement of N is N
+    ASSERT_TRUE(get_rc(S) == rev_S);
+}

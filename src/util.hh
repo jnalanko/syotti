@@ -22,14 +22,15 @@ typedef int64_t LL;
 string get_rc(string S){
     std::reverse(S.begin(), S.end());
     for(char& c : S){
-        if(!(c >= 'A' && c <= 'Z')){
-            cerr << "Error: non-upper-case character found: " << c << endl;
+        if(c != 'A' && c != 'C' && c != 'G' && c != 'T' && c != 'N'){
+            cerr << "Error: ACGTN character found: " << c << endl;
             exit(1);
         }
         if(c == 'A') c = 'T';
         else if(c == 'C') c = 'G';
         else if(c == 'G') c = 'C';
         else if(c == 'T') c = 'A';
+        // The reverse complement of N is N
     }
     return S;
 }
@@ -63,11 +64,12 @@ string get_minimizer(const string& S, LL g){
     return M;
 }
 
-LL hamming_distance(const string& A, const string& B){
+// 'N' is defined to not match to anything
+LL hamming_distance_not_matching_N(const string& A, const string& B){
     assert(A.size() == B.size());
     LL ans = 0;
     for(LL i = 0; i < A.size(); i++){
-        if(A[i] != B[i]) ans++;
+        if(A[i] == 'N' || B[i] == 'N' || A[i] != B[i]) ans++;
     }
     return ans;
 }

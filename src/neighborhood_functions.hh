@@ -165,7 +165,7 @@ public:
             LL doc_id = P.first;
             LL pos = P.second;
             string y = seqs->at(doc_id).substr(pos, bait_length);
-            if(hamming_distance(baitmer,y) <= d)
+            if(hamming_distance_not_matching_N(baitmer,y) <= d)
                 verified_matches.push_back({doc_id, pos});
         }
         return verified_matches;

@@ -24,5 +24,5 @@ build_FM_index:
 	g++ $(SRC_DIR)/build_FM_index.cpp -O3 -o $(BINARY_DIR)/build_FM_index -g -Wall -Wno-sign-compare $(LIBPATHS) $(INCLUDEPATHS) $(LIBS)
 
 tests:
-	g++ $(SRC_DIR)/test_FM_index.cpp -lgtest -lgtest_main -lpthread -o $(BINARY_DIR)/test_FM_index $(LIBPATHS) $(INCLUDEPATHS) $(LIBS)
-	g++ $(SRC_DIR)/test_greedy.cpp -lgtest -lgtest_main -lpthread -o $(BINARY_DIR)/test_greedy $(LIBPATHS) $(INCLUDEPATHS) $(LIBS)
+	g++ $(SRC_DIR)/test_FM_index.cpp -L googletest/build/lib/ -lgtest -lgtest_main -lpthread -o $(BINARY_DIR)/test_FM_index $(LIBPATHS) $(INCLUDEPATHS) $(LIBS)
+	g++ $(SRC_DIR)/test_greedy.cpp -L googletest/build/lib/ -lgtest -lgtest_main -lpthread -o $(BINARY_DIR)/test_greedy $(LIBPATHS) $(INCLUDEPATHS) $(LIBS)
