@@ -157,7 +157,6 @@ public:
         this->d = d;
     }
 
-    // Also searches for the reverse complement
     vector<pair<LL,LL> > get_neighbors(const string& baitmer){
         vector<pair<LL,LL> > candidates = NCF->get_candidates(baitmer);
         vector<pair<LL,LL> > verified_matches;
