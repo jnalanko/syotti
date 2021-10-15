@@ -16,11 +16,19 @@ TEST(greedy_test, hamming_distance_not_matching_N){
     ASSERT_TRUE(hamming_distance_not_matching_N(S,T) == 6);
 }
 
-/*
 TEST(greedy_test, small_hand_crafted){
-    vector<string> seqs = {"AAAAAACCCCCCAAAA","NNNNNNNNNNNNN"};
+    vector<string> seqs = {"AAAAAACCCCCCATATATAGTTTTTTTT",
+                           "NNNNNNNNNNNNN",
+                           "AAAAAAAACTATATATGGGGGGTTTTTT", // First again
+                           "AAAAAAAACTATATATGGGGGGTTTTTT", // RC of the first
+                           "AANNAANNCCNNATNNATNNTTNNTTNN", // The first but N's such that there is no common 5-mer with 1 mismatch
+                           "AANNAANNCTNNATNNGGNNGGNNTTNN", // The RC of the first but N's such that there is no common 5-mer with 1 mismatch
+                           "NNNNNATATATANNNNNNNNN", // Island in the middle should be covered by bait TATAT
+                           "TACGT", // Unique
+                           "ACGTA", // RC of above
+                           };
     LL d = 1;
-    LL g = 3;
+    LL g = 2;
     LL bait_length = 5;
 
     FM_index fmi;
@@ -32,10 +40,29 @@ TEST(greedy_test, small_hand_crafted){
 
     Greedy G_FM;
     G_FM.init(&FM_NF, &seqs, bait_length, d, g, false, 1);
+    Greedy::Result result = G_FM.run();
 
-    // TODO
+    // Covering the first sequence should happen like this:
+    // AAAAA covers the prefix AAAAAAC and by reverse complement the suffix GTTTTTTTT.
+    // CCCCC covers CCCCCCA.
+    // TATAT covers TATATA (also the last A because of reverse complement ATATA).
+    // The Ns don't match to each other so they are all covered separately.
+    // The third input sequence is just the reverse complement of the first, so it is automatically covered.
+    vector<string> expected_baits = {"AAAAA","CCCCC","TATAT", // First sequence
+                                     "NNNNN","NNNNN","NNNNN", // Second sequence
+                                                              // 3. sequence: already covered
+                                                              // 4. sequence: already covered
+                                     "AANNA","ANNCC","NNATN","NATNN","TTNNT","NTTNN",  // 5. sequence
+                                     "AANNA","ANNCT","NNATN","NGGNN","GGNNT","NTTNN", // 6. sequence
+                                     "NNNNN","NNNNN","NNNNN", // 7. sequence
+                                     "TACGT", // 8. sequence
+                                              // 9. sequence: already covered as RC of 8.
+                                      };
 
-}*/
+    cout << result.baits << endl;
+    cout << expected_baits << endl;
+    ASSERT_TRUE(result.baits == expected_baits);
+}
 
 TEST(greedy_test, FM_against_hash){
     LL d = 4;
