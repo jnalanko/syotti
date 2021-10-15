@@ -212,9 +212,9 @@ int main(int argc, char** argv){
     throwing_ofstream match_positions(out_prefix + "-match-positions.txt");
 
     cerr << "Loading sequences" << endl;
-    vector<string> sequences = read_sequences(sequence_file, true); // Reverse complements included to match the FM index. TODO: document.
+    vector<string> sequences = read_sequences(sequence_file);
     cerr << "Loading baits" << endl;
-    vector<string> baits = read_sequences(baitfile, false); // Reverse complements not included
+    vector<string> baits = read_sequences(baitfile);
 
     assert(baits.size() > 0);
     for(LL i = 1; i < baits.size(); i++) assert(baits[i].size() == baits[i-1].size());

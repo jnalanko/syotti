@@ -114,9 +114,9 @@ int main(int argc, char** argv){
     check_writable(outfile);
 
     cerr << "Loading sequences" << endl;
-    vector<string> seqs = read_sequences(cli_params["sequences"].as<string>(), true); // Also appends reverse complements
+    vector<string> seqs = read_sequences(cli_params["sequences"].as<string>());
     cerr << "Loading baits" << endl;
-    vector<string> baits = read_sequences(cli_params["baits"].as<string>(), false); // Don't append reverse complements
+    vector<string> baits = read_sequences(cli_params["baits"].as<string>());
     cerr << "Loading cover marks" << endl;
     vector<vector<bool> > cover_marks = read_cover_marks(cli_params["cover-marks"].as<string>());
     

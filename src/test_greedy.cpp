@@ -41,7 +41,7 @@ TEST(greedy_test, FM_against_hash){
     LL d = 4;
     LL g = 12;
     LL bait_length = 20;
-    vector<string> seqs = read_sequences("testcases/coli3.fna", true);
+    vector<string> seqs = read_sequences("testcases/coli3.fna");
     FM_index fmi;
     fmi.construct(seqs);
     FM_NeighborCandidateFunction FM_NCF;

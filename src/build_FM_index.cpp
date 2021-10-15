@@ -40,7 +40,7 @@ int main(int argc, char** argv){
     string infile = cli_params["sequences"].as<string>();
     string outfile = cli_params["output"].as<string>();
     throwing_ofstream out(outfile, ios_base::binary);
-    vector<string> seqs = read_sequences(infile, true);
+    vector<string> seqs = read_sequences(infile);
     FMI.construct(seqs);
     LL written = FMI.serialize(out.stream);
     cerr << "Wrote " << written << " bytes to " << outfile << endl;
