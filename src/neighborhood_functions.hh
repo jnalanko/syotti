@@ -56,6 +56,11 @@ public:
         this->FMI = fmi;
     }
 
+    bool is_all_N(const string& S){
+        for(char c : S) if(c != 'N') return false;
+        return true;
+    }
+
     // Returns a pair (document id, starting position of a baitmer match in the document)
     // This does not return reverse complement matches.
     vector<pair<LL,LL> > get_candidates(const string& baitmer){
@@ -64,7 +69,10 @@ public:
         #pragma omp parallel for
         for(LL i = 0; i < baitmer.size()-g+1; i++){
             string z = baitmer.substr(i,g);
-            ans_vecs[i] = FMI->subpattern_search(z, baitmer.size(), i);
+            if(!is_all_N(z)){
+                // Save time by not searching seeds that are all 'N'
+                ans_vecs[i] = FMI->subpattern_search(z, baitmer.size(), i);
+            }
         }
 
         // Collect answer vectors
