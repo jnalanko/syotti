@@ -127,8 +127,8 @@ Usage:
                               (default: "")
   -b, --baits arg             Path to the fasta file of the baits. (default:
                               "")
-  -c, --cover-marks arg       Path to a fasta file of the cover marks created
-                              by the greedy algorithm. (default: "")
+  -c, --cover-marks arg       Path to the file of the cover marks created by
+                              the greedy algorithm. (default: "")
   -o, --out arg               Output filename (fasta) (default: "")
       --fm-index-out arg      The algorithm is based on FM-index, which we
                               build at the start. Building the index can take a
@@ -147,6 +147,7 @@ Usage:
   -g, --seed-len arg          Seed and extend g-mer seed length (default: 20)
   -v, --verbose               Print debug output
   -h, --help                  Print instructions.
+
 ```
 
 ### Taking a random subset of baits
