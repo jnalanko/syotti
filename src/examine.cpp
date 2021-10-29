@@ -208,7 +208,7 @@ int main(int argc, char** argv){
     throwing_ofstream final_gaps_out(out_prefix + "-gaps.txt");
     throwing_ofstream final_crossings_out(out_prefix + "-crossings.txt");
     throwing_ofstream final_coverage_out(out_prefix + "-coverage.txt");
-    throwing_ofstream final_cove_marks_out(out_prefix + "-cover-marks.txt");
+    throwing_ofstream final_cover_marks_out(out_prefix + "-cover-marks.txt");
     throwing_ofstream cover_curve_out(out_prefix + "-cover-fractions.txt");
     throwing_ofstream match_positions(out_prefix + "-match-positions.txt");
 
@@ -270,8 +270,8 @@ int main(int argc, char** argv){
         if(state.bait_id == baits.size()-1){
             cerr << "Writing cover marks" << endl;
             for(auto& v : state.cover){
-                for(LL b : v) final_coverage_out.stream << min((LL)1, b);
-                final_coverage_out.stream << "\n";
+                for(LL b : v) final_cover_marks_out.stream << min((LL)1, b);
+                final_cover_marks_out.stream << "\n";
             }
         }
     };    
