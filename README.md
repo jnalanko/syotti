@@ -1,4 +1,4 @@
-# Bait cover toolkit
+# Minimum Bait Cover Toolkit Syotti
 
 This is a set of command line tools to compute a cover for a set of reference sequences using short bait strings.
 
