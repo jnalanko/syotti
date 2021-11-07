@@ -1,12 +1,12 @@
 # Minimum Bait Cover Toolkit Syotti
 
-This is a set of command line tools to compute a cover for a set of reference sequences using short bait strings.
+This is a set of command line tools to compute a cover for a set of reference sequences using short bait strings. The method is documented in our [bioRxiv preprint](https://www.biorxiv.org/content/10.1101/2021.11.05.467426v1).
 
 ## Problem definition
 
 Strings A and B of equal length are *d-Hamming neighbors* if the [Hamming distance](https://en.wikipedia.org/wiki/Hamming_distance) of A to B or the reverse complement of B is at most d.
 
-The problem is parameterized by two integers d and L. Suppose we have a set of reference sequences S_1, S_2, ... , S_n from the alphabet {A,C,G,T,N}. The special character N is defined to not match with itself. The goal is to find a small set of bait strings B_1, ... , B_m, all of equal length L, such that the baits together cover every position of the reference sequences. Bait B_i is considered to cover position j of reference S_k if there is a length-L substring X of S_k spanning position j such that X and B_i are d-Hamming neighbors.
+The problem is parameterized by two integers d and L. Suppose we have a set of reference sequences S_1, S_2, ... , S_n from the alphabet {A,C,G,T,N}. The special character N is defined to not match with itself. The goal is to find a small set of bait strings B_1, ... , B_m, all of equal length L, such that the baits together cover every position of the reference sequences. A bait is considered to cover all length-L substrings of the reference sequences that are d-hamming neighbors with the bait.
 
 ## Compiling
 
