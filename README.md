@@ -27,7 +27,17 @@ After this, you may build the toolkit with:
 make toolkit
 ```
 
-## Usage
+## Quick start
+
+Currently, only FASTA input files are supported. To test the tool, we provide an example input file at testcases/coli3.fna. The example file contains three E. coli genomes. To compute a bait set for the genomes, run the following command:
+
+```
+./bin/greedy --bait-len 120 --hamming-distance 40 -s testcases/coli3.fna -r -o baits.fna
+```
+
+This sets the bait length to 120 and tolerates 40 mismatches per match. The flag `-r` randomizes the order in which the input sequences are processed, which often leads to better results. The baits are written to baits.fna.
+
+## Detailed Usage
 
 Most of the tools here need an [FM-index](https://en.wikipedia.org/wiki/FM-index). The tools build it at the start, but they can also re-use a pre-computed FM-index. To build an FM-index, run for example the following:
 
