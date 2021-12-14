@@ -23,7 +23,7 @@ string get_rc(string S){
     std::reverse(S.begin(), S.end());
     for(char& c : S){
         if(c != 'A' && c != 'C' && c != 'G' && c != 'T' && c != 'N'){
-            cerr << "Error: ACGTN character found: " << c << endl;
+            cerr << "Error: non-ACGTN character found: " << c << endl;
             exit(1);
         }
         if(c == 'A') c = 'T';
