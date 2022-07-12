@@ -44,4 +44,6 @@ int index_main(int argc, char** argv){
     FMI.construct(seqs);
     LL written = FMI.serialize(out.stream);
     cerr << "Wrote " << written << " bytes to " << outfile << endl;
+
+    return 0;
 }
