@@ -9,7 +9,7 @@
 using namespace std;
 typedef long long LL;
 
-int main(int argc, char** argv){
+int subset_main(int argc, char** argv){
     cxxopts::Options options(argv[0], "Take a random subset of sequences in a fasta file.");
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value
 
@@ -56,5 +56,7 @@ int main(int argc, char** argv){
     for(LL i = 0; i < howmany; i++){
         out << seqs[i].second << "\n" << seqs[i].first << "\n";
     }
+
+    return 0;
 
 }

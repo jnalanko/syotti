@@ -20,7 +20,7 @@
 
 using namespace std;
 
-int main(int argc, char** argv){
+int index_main(int argc, char** argv){
 
     cxxopts::Options options(argv[0], "Build an FM index.");
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value

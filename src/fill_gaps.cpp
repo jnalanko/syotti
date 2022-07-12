@@ -70,7 +70,7 @@ void run(NeighborFunction& NF, vector<string>& seqs, vector<string>& baits, vect
     }
 }
 
-int main(int argc, char** argv){
+int fill_gaps_main  (int argc, char** argv){
 
     cxxopts::Options options(argv[0], "Fills gaps in a given bait cover.");
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value
@@ -155,5 +155,7 @@ int main(int argc, char** argv){
     for(LL i = 0; i < baits.size(); i++){
         out << ">" << i << "\n" << baits[i] << "\n";
     }
+
+    return 0;
 
 }    

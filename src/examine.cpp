@@ -158,7 +158,7 @@ LL run_length(const vector<T>& v, LL from){
     return idx-from;
 }
 
-int main(int argc, char** argv){
+int examine_main(int argc, char** argv){
 
     cxxopts::Options options(argv[0], "Computes various statistics on a given bait set.");
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value
@@ -300,5 +300,6 @@ int main(int argc, char** argv){
 
     run(sequences, baits, fmi, d, g, bait_length, verbose, callbacks);
 
+    return 0;
 
 }

@@ -22,7 +22,7 @@
 
 using namespace std;
 
-int main(int argc, char** argv){
+int design_main(int argc, char** argv){
 
     cxxopts::Options options(argv[0],"Computes a greedy bait cover.");
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value
@@ -122,5 +122,7 @@ int main(int argc, char** argv){
         for(bool b : v) cover_marks_out << b;
         cover_marks_out << "\n";
     }
+
+    return 0;
     
 }
