@@ -1,12 +1,16 @@
-# Minimum Bait Cover Toolkit Syotti
+# Minimum Bait Cover Tool Syotti
 
-This is a set of command line tools to compute a cover for a set of reference sequences using short bait strings. The method is documented in our [bioRxiv preprint](https://www.biorxiv.org/content/10.1101/2021.11.05.467426v1).
+Syotti is a tool to find a small set of short DNA strings ("baits") to fully cover a set of target sequences. The method is described in our paper in [Bioinformatics](https://academic.oup.com/bioinformatics/article/38/Supplement_1/i177/6617487).
 
 ## Problem definition
 
-Strings A and B of equal length are *d-Hamming neighbors* if the [Hamming distance](https://en.wikipedia.org/wiki/Hamming_distance) of A to B or the reverse complement of B is at most d.
+Strings A and B of equal length are *d-Hamming neighbors* if the [Hamming distance](https://en.wikipedia.org/wiki/Hamming_distance) of A to B *or the reverse complement* of B is at most d.
 
-The problem is parameterized by two integers d and L. Suppose we have a set of reference sequences S_1, S_2, ... , S_n from the alphabet {A,C,G,T,N}. The special character N is defined to not match with itself. The goal is to find a small set of bait strings B_1, ... , B_m, all of equal length L, such that the baits together cover every position of the reference sequences. A bait is considered to cover all length-L substrings of the reference sequences that are d-hamming neighbors with the bait.
+The problem is parameterized by two integers d and L. Suppose we have a set of reference sequences S_1, S_2, ... , S_n from the alphabet {A,C,G,T,N}. The special character N is defined to not match with itself. The goal is to find a small set of bait strings B_1, ... , B_m, all of equal length L, such that the baits together cover every position of the reference sequences. A bait is considered to cover all length-L substrings of the reference sequences that are d-hamming neighbors with the bait. Syotti produces an approximate solution for this problem.
+
+## IMPORTANT: Shortcomings
+
+Syotti solves the abstract string matching problem defined above. It does not take into consideration practical issues such as off-target binding, bait melting temperature or bait-to-bait binding. Postprocessing the baits to suit the requirements of your particular sequencing project is advised.
 
 ## Compiling
 
@@ -24,7 +28,7 @@ cd ..
 After this, you may build the toolkit with:
 
 ```
-make toolkit
+make syotti
 ```
 
 ## Quick start
@@ -32,7 +36,7 @@ make toolkit
 Currently, only FASTA input files are supported. To test the tool, we provide an example input file at testcases/coli3.fna. The example file contains three E. coli genomes. To compute a bait set for the genomes, run the following command:
 
 ```
-./bin/greedy --bait-len 120 --hamming-distance 40 -s testcases/coli3.fna -r -o baits.fna
+./bin/syotti design --bait-len 120 --hamming-distance 40 -s testcases/coli3.fna -r -o baits.fna
 ```
 
 This sets the bait length to 120 and tolerates 40 mismatches per match. The flag `-r` randomizes the order in which the input sequences are processed, which often leads to better results. The baits are written to baits.fna.
@@ -42,7 +46,7 @@ This sets the bait length to 120 and tolerates 40 mismatches per match. The flag
 Most of the tools here need an [FM-index](https://en.wikipedia.org/wiki/FM-index). The tools build it at the start, but they can also re-use a pre-computed FM-index. To build an FM-index, run for example the following:
 
 ```
-./bin/build_FM_index -s testcases/coli3.fna -o coli3.fmi
+./bin/syotti index -s testcases/coli3.fna -o coli3.fmi
 ```
 
 The full set of input parameters is listed below
@@ -50,7 +54,7 @@ The full set of input parameters is listed below
 ```
 Build an FM index.
 Usage:
-  ./bin/build_FM_index [OPTION...]
+  syotti index [OPTION...]
 
   -s, --sequences arg  Path to the fasta file of the input sequences.
                        (default: "")
@@ -63,7 +67,7 @@ Usage:
 For example, to compute a set of baits of length 120, allowing up to 40 mismatches, covering at least 98 percent of the file `testcases/coli3.fna` (found in this repository), using the FM-index stored at coli3.fmi, use the following:
 
 ```
-./bin/greedy -L 120 -d 40 -c 0.98 -s testcases/coli3.fna -f coli3.fmi -o ./my_result_path
+./bin/syotti design -L 120 -d 40 -c 0.98 -s testcases/coli3.fna -f coli3.fmi -o ./my_result_path
 ```
 
 This writes three output files: 
@@ -79,7 +83,7 @@ If the FM-index is not given, it is built at the start. The full set of input pa
 ```
 Computes a greedy bait cover.
 Usage:
-  ./bin/greedy [OPTION...]
+  syotti design
 
   -L, --bait-len arg          Length of the baits. (default: 120)
   -d, --hamming-distance arg  Number of allowed mismatches in the baits.
@@ -120,7 +124,7 @@ Usage:
 If the cutoff (--cutoff) of the greedy algorithm was set to below 1, there may be gaps in the cover. In this case, we can add in some more baits to ensure that the maximum gap length is at most a given value. For example, to continue from the example of the greedy algorithm above, you may run the following to ensure that the longest gap is at most 10 characters wide:
 
 ```
-./bin/fill_gaps -G 10 -d 40 -s testcases/coli3.fna -f coli3.fmi -b my_result_path-baits.fna -c my_result_path-cover-marks.txt -o my_extended_bait_set.fna
+./bin/syotti fill-gaps -G 10 -d 40 -s testcases/coli3.fna -f coli3.fmi -b my_result_path-baits.fna -c my_result_path-cover-marks.txt -o my_extended_bait_set.fna
 ```
 
 The full set of parameter is given below.
@@ -128,7 +132,7 @@ The full set of parameter is given below.
 ```
 Fills gaps in a given bait cover.
 Usage:
-  ./bin/fill_gaps [OPTION...]
+  syotti fill-gaps [OPTION...]
 
   -G, --max-gap arg           Maximum allowable gap length. (default: 0)
   -d, --hamming-distance arg  Number of allowed mismatches in the baits.
@@ -165,7 +169,7 @@ Usage:
 If you want to reduce the number of baits, you may want to keep only some random subset of them. For example, to keep a subset of size 1000, run the following:
 
 ```
-./bin/random_subset -i input.fna -o output.fna -n 1000
+./bin/syotti subset -i input.fna -o output.fna -n 1000
 ```
 
 The full set of input parameters is below:
@@ -173,7 +177,7 @@ The full set of input parameters is below:
 ```
 Take a random subset of sequences in a fasta file.
 Usage:
-  ./bin/random_subset [OPTION...]
+  syotti subset [OPTION...]
 
   -i, --input arg   Input fasta file. (default: "")
   -o, --output arg  Output fasta file. (default: "")
@@ -186,7 +190,7 @@ Usage:
 To compute various statistics on any bait set baits.fna, run for example the following:
 
 ```
-./bin/examine -d 40 -s testcases/coli3.fna -f coli3.fmi -b baits.fna -o ./my_examine_output_path
+./bin/syotti examine -d 40 -s testcases/coli3.fna -f coli3.fmi -b baits.fna -o ./my_examine_output_path
 ```
 
 This writes the following output files:
@@ -196,7 +200,6 @@ This writes the following output files:
 | ./my_examine_output_path-coverage.txt               | A text file with a number of lines equal to the number of the reference sequences. Line i has a space-separated list of integers such that the j-th integer is the number of baits that cover position j in the i-th reference sequence|
 | ./my_examine_output_path-cover-marks.txt               | The same cover marks file as generated by the greedy algorithm. |
 | ./my_examine_output_path-cover-fractions.txt        | Same as the cover fractions file output by the greedy algorithm. |
-| ./my_examine_output_path-crossings.txt              | A text file with a number of lines equal to the lengths of the baits. The i-th file has a pair (x,y), were y is the fraction of baits that cross a branch in the de-bruijn graph of order x of the input sequences. |
 | ./my_examine_output_path-gaps.txt | A text file consisting of one line of space-separated integers representing the lengths of the runs of zeroes in the cover marks file. If the cover has no gaps the line is empty. |
 
 The full set of input parameters is listed below
@@ -204,7 +207,7 @@ The full set of input parameters is listed below
 ```
 Computes various statistics on a given bait set.
 Usage:
-  ./bin/examine [OPTION...]
+  syotti examine [OPTION...]
 
   -d, --hamming-distance arg  Number of allowed mismatches in the baits.
                               (default: 40)

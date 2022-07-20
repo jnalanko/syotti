@@ -160,7 +160,7 @@ LL run_length(const vector<T>& v, LL from){
 
 int examine_main(int argc, char** argv){
 
-    cxxopts::Options options(argv[0], "Computes various statistics on a given bait set.");
+    cxxopts::Options options(argv[0], "Computes various statistics on a given bait set. See Readme.");
     int original_argc = argc; // It seems the CLI parsing library modifies argc, so store the original value
 
     options.add_options()
@@ -206,7 +206,6 @@ int examine_main(int argc, char** argv){
     }
 
     throwing_ofstream final_gaps_out(out_prefix + "-gaps.txt");
-    throwing_ofstream final_crossings_out(out_prefix + "-crossings.txt");
     throwing_ofstream final_coverage_out(out_prefix + "-coverage.txt");
     throwing_ofstream final_cover_marks_out(out_prefix + "-cover-marks.txt");
     throwing_ofstream cover_curve_out(out_prefix + "-cover-fractions.txt");
@@ -276,16 +275,6 @@ int examine_main(int argc, char** argv){
         }
     };    
 
-    callback_t count_branch_crossings_callback = [&](const State& state){
-        if(state.bait_id == baits.size()-1){
-            cerr << "Counting branch crossings" << endl;
-            vector<LL> crossing_counts = count_branch_crossings(sequences, baits, fmi, n_threads);
-            for(LL order = 1; order < crossing_counts.size(); order++){
-                final_crossings_out.stream << order << " " << (double)crossing_counts[order]/baits.size() << endl;
-            }
-        }
-    };
-
     callback_t write_match_positions = [&](const State& state){
         // Line format: bait-id ref-id start-pos-in-ref mismatches is-rc-match
         for(pair<LL,LL> P : state.neighbors){
@@ -296,7 +285,7 @@ int examine_main(int argc, char** argv){
         }
     };
 
-    vector<callback_t> callbacks = {gap_length_callback, write_coverage_callback, write_cover_marks_callback, write_cover_curve_callback, count_branch_crossings_callback, write_match_positions};
+    vector<callback_t> callbacks = {gap_length_callback, write_coverage_callback, write_cover_marks_callback, write_cover_curve_callback, write_match_positions};
 
     run(sequences, baits, fmi, d, g, bait_length, verbose, callbacks);
 
