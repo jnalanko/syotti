@@ -1,3 +1,5 @@
+![Syotti logo](logo.png)
+
 # Minimum Bait Cover Tool Syotti
 
 Syotti is a tool to find a small set of short DNA strings ("baits") to fully cover a set of target sequences. The method is described in our paper in [Bioinformatics](https://academic.oup.com/bioinformatics/article/38/Supplement_1/i177/6617487).
