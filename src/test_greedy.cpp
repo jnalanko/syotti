@@ -26,8 +26,6 @@ TEST(greedy_test, small_hand_crafted){
                            "NNNNNATATATANNNNNNNNN", // Island in the middle should be covered by bait TATAT
                            "TACGT", // Unique
                            "ACGTA", // RC of above
-                           "TGTXT", // Non-ACGTN character
-                           "AYACA", // RC of above with X changed to Y
                            };
     LL d = 1;
     LL g = 2;
@@ -59,8 +57,6 @@ TEST(greedy_test, small_hand_crafted){
                                      "NNNNN","NNNNN","NNNNN", // 7. sequence
                                      "TACGT", // 8. sequence
                                               // 9. sequence: already covered as RC of 8.
-                                     "TGTNT", // 10. sequence. The x should be replaced with an N
-                                     "", // 10. sequence: already covered as RC of 9
                                       };
 
     cout << result.baits << endl;

@@ -3,8 +3,7 @@
 
 char get_rc(char c){
     if(c != 'A' && c != 'C' && c != 'G' && c != 'T' && c != 'N'){
-        cerr << "Error: non-ACGTN character found: " << c << endl;
-        exit(1);
+        cerr << "Warning: non-ACGTN character found: " << c << endl;
     }
     if(c == 'A') return 'T';
     else if(c == 'C') return 'G';

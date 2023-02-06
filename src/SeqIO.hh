@@ -145,6 +145,16 @@ public:
 
     int64_t get_mode() const {return mode;}
 
+    void fix_alphabet(char* buf, int64_t len){
+        for(int64_t i = 0; i < len; i++){
+            char c = buf[i];
+            if(c != 'A' && c != 'C' && c != 'G' && c != 'T' && c != 'N'){
+                cerr << "Warning: non-ACGTN-character found: '" << c << "'. Replacing with 'N'" << endl; 
+                buf[i] = 'N';
+            }
+        }
+    }
+
     // Returns length of read, or zero if no more reads.
     // The read is null-terminated.
     // The read is stored in the member pointer `read_buffer`
@@ -153,6 +163,7 @@ public:
     int64_t get_next_read_to_buffer() {
         if(reverse_complements){
             if(return_rc_next){
+                // Copy from rc_buf to read_buf
                 strcpy(read_buf, rc_buf.data());
                 rc_buf.clear();
                 return_rc_next = false;
@@ -204,6 +215,7 @@ public:
                     rc_buf.push_back(read_buf[i]);
                 reverse_complement_c_string(rc_buf.data(), buf_pos);
             }
+            fix_alphabet(read_buf, buf_pos);
             return buf_pos;
         } else if(mode == FASTQ){
             char c = 0;
@@ -246,8 +258,10 @@ public:
                 for(int64_t i = 0; i < buf_pos+1; i++) // +1: also copy the null
                     rc_buf.push_back(read_buf[i]);
                 reverse_complement_c_string(rc_buf.data(), buf_pos);
+                fix_alphabet(rc_buf.data(), buf_pos);
             }
 
+            fix_alphabet(read_buf, buf_pos);
             return buf_pos;
         } else{
             throw std::runtime_error("Should not come to this else-branch");
@@ -361,129 +375,5 @@ class Writer{
 };
 
 int64_t count_sequences(const string& filename);
-
-/*
-LEGACY UNBUFFERED INPUT READING BELOW.
-*/
-
-class Unbuffered_Read_stream{
-    
-private:
-    
-    throwing_ifstream* file;
-
-public:
-
-    string header;
-    int64_t mode;
-    string dummy; // Used to skip over lines in fastq
-    bool upper_case_enabled;
-    
-    // mode is FASTA_MODE of FASTQ_MODE defined in this file
-    Unbuffered_Read_stream(throwing_ifstream* file, string header, int64_t mode, bool upper_case_enabled) : file(file), header(header), mode(mode), upper_case_enabled(upper_case_enabled) {
-    
-    }
-
-    // Behaviour: Tries to read a char to c by peeking the file stream. Return false
-    // if could not get a character because the sequence ended, otherwise return true.
-    // If this returns false then the file stream will be put in such a state that the
-    // next character is the first character of the header of the next read (or the EOF
-    // character if it was the last read).
-    bool getchar(char& c){
-        if(mode == FASTA){
-            start:
-            int next_char = file->stream.peek();
-            if(next_char == EOF || next_char == '>') return false;
-            if(next_char == '\n' || next_char == '\r'){
-                file->read(&c,1);
-                goto start; // "recursive call"
-            }
-            file->read(&c,1);
-            if(upper_case_enabled) c = toupper(c);
-            return true;
-        } else if(mode == FASTQ){
-            int next_char = file->stream.peek();
-            if(next_char == '\n' || next_char == '\r') {
-                // End of read. Rewind two lines forward to get to the header of the next read
-                // for the next read stream
-                file->getline(dummy); // Consume the newline
-                assert(file->stream.peek() == '+');
-                file->getline(dummy); // Consume the '+'-line
-                file->getline(dummy); // Consume the quality values
-                return false;
-            }
-            else{
-                file->read(&c,1);
-                if(upper_case_enabled) c = toupper(c);
-                return true;
-            }
-        } else{
-            throw(std::runtime_error("Invalid sequence read mode: " + mode));
-        }
-    }
-
-    string get_all(){ // todo: make more efficient?
-        char c;
-        string read;
-        while(getchar(c)) read += c;
-        return read;
-    }
-
-};
-
-// Unbuffered!! If you don't need headers, use SeqIO::Reader
-class Unbuffered_Reader{
-
-public:
-
-    throwing_ifstream file;
-    int64_t mode;
-    bool upper_case_enabled;
-
-    void sanity_check(){
-        if(mode == FASTA) {
-            if(file.stream.peek() != '>'){
-                throw runtime_error("Error: FASTA-file does not start with '>'");
-            }
-        }
-        if(mode == FASTQ) {
-            if(file.stream.peek() != '@'){
-                throw runtime_error("Error: FASTQ-file does not start with '@'");
-            }
-        }
-    }
-
-    // mode is FASTA_MODE of FASTQ_MODE defined in this file
-    Unbuffered_Reader(string filename, int64_t mode) : file(filename, ios::in | ios::binary), mode(mode), upper_case_enabled(true) {
-        sanity_check();
-    }
-
-    Unbuffered_Reader(string filename) : file(filename, ios::in | ios::binary), upper_case_enabled(true) {
-        SeqIO::FileFormat fileformat = figure_out_file_format(filename);
-        if(fileformat.format == FASTA) mode = FASTA;
-        else if(fileformat.format == FASTQ) mode = FASTQ;
-        else throw(runtime_error("Unknown file format: " + filename));
-        sanity_check();
-    }
-
-    Unbuffered_Read_stream get_next_query_stream(){
-        string header;
-        file.getline(header);
-        if(header.size() < 1) throw runtime_error("Error: FASTA or FASTQ parsing: header does not start with '>' or '@'");
-        header = header.substr(1); // Drop the '>' in FASTA or '@' in FASTQ
-        Unbuffered_Read_stream rs(&file, header, mode, upper_case_enabled);
-        return rs;
-    }
-
-    // If flag is true, then query streams will upper case all sequences (off by default)
-    void set_upper_case(bool flag){
-        upper_case_enabled = flag;
-    }
-
-    bool done(){
-        return file.stream.peek() == EOF;
-    }
-
-};
 
 } // Namespace SeqIO
