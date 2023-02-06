@@ -1,4 +1,4 @@
-#include "input_reading.hh"
+#include "SeqIO.hh"
 
 // Vector of (read, header) pairs
 std::vector<std::pair<std::string, std::string> > parse_FASTA(std::string filename){

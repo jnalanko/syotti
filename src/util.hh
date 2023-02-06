@@ -11,7 +11,7 @@
 #include <map>
 #include <sstream>
 #include <fstream>
-#include "input_reading.hh"
+#include "SeqIO.hh"
 #include <unordered_set>
 #include <cmath>
 #include "stdlib_printing.hh"
@@ -19,6 +19,7 @@
 
 typedef int64_t LL;
 
+char get_rc(char c);
 string get_rc(string S);
 string get_canonical(const string& S);
 vector<string> split(string s, char delimiter);

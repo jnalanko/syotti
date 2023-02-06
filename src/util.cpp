@@ -1,18 +1,22 @@
 
 #include "util.hh"
 
+char get_rc(char c){
+    if(c != 'A' && c != 'C' && c != 'G' && c != 'T' && c != 'N'){
+        cerr << "Error: non-ACGTN character found: " << c << endl;
+        exit(1);
+    }
+    if(c == 'A') return 'T';
+    else if(c == 'C') return 'G';
+    else if(c == 'G') return 'C';
+    else if(c == 'T') return 'A';
+    else return 'N'; // The reverse complement of N is N
+}
+
 string get_rc(string S){
     std::reverse(S.begin(), S.end());
     for(char& c : S){
-        if(c != 'A' && c != 'C' && c != 'G' && c != 'T' && c != 'N'){
-            cerr << "Error: non-ACGTN character found: " << c << endl;
-            exit(1);
-        }
-        if(c == 'A') c = 'T';
-        else if(c == 'C') c = 'G';
-        else if(c == 'G') c = 'C';
-        else if(c == 'T') c = 'A';
-        // The reverse complement of N is N
+        c = get_rc(c);
     }
     return S;
 }
@@ -58,10 +62,13 @@ LL hamming_distance_not_matching_N(const string& A, const string& B){
 
 vector<string> read_sequences(string filename, bool append_reverse_complements){
     vector<string> seqs;
-    Sequence_Reader sr(filename, FASTA_MODE);
-    while(!sr.done()){
-        seqs.push_back(sr.get_next_query_stream().get_all());
+    SeqIO::Reader<> reader(filename);
+    while(true){
+        int64_t len = reader.get_next_read_to_buffer();
+        if(len == 0) break;
+        seqs.push_back(string(reader.read_buf));
     }
+
     if(append_reverse_complements){
         LL n = seqs.size();
         for(LL i = 0; i < n; i++)

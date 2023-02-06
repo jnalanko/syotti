@@ -253,3 +253,5 @@ public:
 
 };
 
+bool operator==(const FM_index::Interval& A, const FM_index::Interval& B);
+std::ostream& operator<<(std::ostream& os, FM_index::Interval I);

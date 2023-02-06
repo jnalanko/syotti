@@ -9,7 +9,7 @@
 #include <map>
 #include <sstream>
 #include <fstream>
-#include "input_reading.hh"
+#include "SeqIO.hh"
 #include <unordered_set>
 #include <cmath>
 #include "stdlib_printing.hh"

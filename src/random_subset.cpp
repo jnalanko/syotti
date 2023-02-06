@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <random>       // std::default_random_engine
 #include <chrono>       // std::chrono::system_clock
-#include "input_reading.hh"
+#include "SeqIO.hh"
 #include "cxxopts.hpp"
 
 using namespace std;
@@ -44,7 +44,13 @@ int subset_main(int argc, char** argv){
         return 1;
     }
 
-    vector<pair<string,string> > seqs = parse_FASTA(in_filename);
+    vector<pair<string,string> > seqs; // Pairs sequence, header
+    SeqIO::Reader<> reader(in_filename);
+    while(true){
+        int64_t len = reader.get_next_read_to_buffer();
+        if(len == 0) break;
+        seqs.push_back({string(reader.read_buf), string(reader.header_buf)});
+    }
     cerr << "Read " << seqs.size() << " sequences" << endl;
 
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -54,7 +60,7 @@ int subset_main(int argc, char** argv){
     cerr << "Writing " << howmany << " sequences to " << out_filename << endl;
     throwing_ofstream out(out_filename);
     for(LL i = 0; i < howmany; i++){
-        out << seqs[i].second << "\n" << seqs[i].first << "\n";
+        out.stream << ">" << seqs[i].second << "\n" << seqs[i].first << "\n";
     }
 
     return 0;
