@@ -16,7 +16,7 @@ Syotti solves the abstract string matching problem defined above. It does not ta
 
 ## Compiling
 
-The toolkit depends on the sdsl-lite library. To clone and build it, first make sure you have the CMake build system installed, and then run the following commands:
+The toolkit depends on the sdsl-lite library and zlib. Most likely zlib is already installed on your machine. To install sdsl-lite, first make sure you have the CMake build system installed, and then run the following commands:
 
 ```
 git submodule init
