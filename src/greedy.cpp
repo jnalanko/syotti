@@ -37,7 +37,7 @@ int design_main(int argc, char** argv){
       ("r,randomize", "Randomize the processing order of the sequences in the greedy algorithm.", cxxopts::value<bool>()->default_value("false"))
       ("t,n-threads", "Maximum number of parallel threads. The program is not very well optimized for parallel processing, so don't expect much of a speedup here.", cxxopts::value<LL>()->default_value("1"))
       ("c,cutoff", "Stop the greedy algorithm after this fraction of positions is covered. For example: 0.99.", cxxopts::value<double>()->default_value("1"))
-      ("--require-cutoff-for-every-sequence", "Stop only when EVERY input sequence has a fraction of bases covered definted by parameter --cutoff", cxxopts::value<bool>()->default_value("false"))
+      ("require-cutoff-for-every-sequence", "Stop only when EVERY input sequence has a fraction of bases covered definted by parameter --cutoff", cxxopts::value<bool>()->default_value("false"))
       ("g,seed-len", "The length of the seeds in the FM-index seed-and-extend approximate string search subroutine. A lower value will find more matches, but will be slower.", cxxopts::value<LL>()->default_value("20"))
       ("h,help", "Print instructions.", cxxopts::value<bool>()->default_value("false"))
     ;
@@ -58,7 +58,7 @@ int design_main(int argc, char** argv){
     LL bait_length = cli_params["bait-len"].as<LL>();
     LL n_threads = cli_params["n-threads"].as<LL>();
     double cutoff = cli_params["cutoff"].as<double>();
-    bool require_cutoff_for_every_sequence = cli_params["require-cutoff-for-every-sequence"].as<double>();
+    bool require_cutoff_for_every_sequence = cli_params["require-cutoff-for-every-sequence"].as<bool>();
     bool randomize = cli_params["randomize"].as<bool>();
 
     omp_set_num_threads(n_threads);
