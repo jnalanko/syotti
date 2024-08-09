@@ -72,7 +72,9 @@ For example, to compute a set of baits of length 120, allowing up to 40 mismatch
 ./bin/syotti design -L 120 -d 40 -c 0.98 -s testcases/coli3.fna -f coli3.fmi -o ./my_result_path
 ```
 
-This writes three output files: 
+IMPORANT: This processes the sequences in the input file in order, and stops when 98% of the total sequence content in the file has been covered by the selected baits. The sequences at the very end of the file may thus end up with 0% coverage. If this is not acceptable, please run with `-c 1.0`.
+
+The program writes three output files: 
 
 | File name     | Explanation |
 | ------------- | ------------- |
