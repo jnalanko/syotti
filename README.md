@@ -12,7 +12,7 @@ The problem is parameterized by two integers d and L. Suppose we have a set of r
 
 ## IMPORTANT: Shortcomings
 
-Syotti solves the abstract string matching problem defined above. It does not take into consideration practical issues such as off-target binding, bait melting temperature or bait-to-bait binding. Postprocessing the baits to suit the requirements of your particular sequencing project is advised.
+Syotti solves the abstract string matching problem defined above. In particular, it does NOT optimize for evenness of coverage as long as the problem as defined above is solved. It also does not take into consideration practical issues such as off-target binding, bait melting temperature or bait-to-bait binding. Postprocessing the baits to suit the requirements of your particular sequencing project is advised.
 
 ## Compiling
 
