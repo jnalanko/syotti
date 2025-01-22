@@ -131,7 +131,9 @@ If the cutoff (--cutoff) of the greedy algorithm was set to below 1, there may b
 ./bin/syotti fill-gaps -G 10 -d 40 -s testcases/coli3.fna -f coli3.fmi -b my_result_path-baits.fna -c my_result_path-cover-marks.txt -o my_extended_bait_set.fna
 ```
 
-The full set of parameter is given below.
+NOTE: the cover marks must correspond to the bait set provided. If have modified the bait set somehow, you need to re-compute the cover marks with the examine-command.
+
+The full set of parameters is given below.
 
 ```
 Fills gaps in a given bait cover.
